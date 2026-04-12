@@ -1,0 +1,18 @@
+<%# AIから抽出した候補日時をTurbo Streamで候補日時リストに差し替える %>
+<%= turbo_stream.update "candidate_dates_list" do %>
+  <%# @extracted_dates の各要素をfields_forで描画する %>
+  <% @extracted_dates.each_with_index do |date_hash, index| %>
+    <% candidate = CandidateDate.new(
+         start_at: Time.zone.parse(date_hash["start_at"].to_s),
+         end_at:   Time.zone.parse(date_hash["end_at"].to_s)
+       ) %>
+    <%= fields_for "event[candidate_dates_attributes]", candidate, index: index do |fields| %>
+      <%= render "candidate_date_fields", fields: fields %>
+    <% end %>
+  <% end %>
+  <% if @extracted_dates.empty? %>
+    <p class="text-sm text-slate-400 text-center py-4">
+      候補日時を抽出できませんでした。別の文章でお試しください。
+    </p>
+  <% end %>
+<% end %>
