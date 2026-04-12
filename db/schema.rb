@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_10_131703) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_12_062825) do
+  create_table "attendances", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.string "user_name"
+    t.text "responses", collation: "utf8mb4_bin"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "comment"
+    t.index ["event_id"], name: "index_attendances_on_event_id"
+  end
+
   create_table "candidate_dates", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
     t.bigint "event_id", null: false
     t.datetime "start_at"
@@ -29,5 +39,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_10_131703) do
     t.index ["token"], name: "index_events_on_token", unique: true
   end
 
+  add_foreign_key "attendances", "events"
   add_foreign_key "candidate_dates", "events"
 end

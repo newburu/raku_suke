@@ -29,10 +29,22 @@
       <p class="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">📌 イベントタイトル</p>
       <p class="text-lg font-bold text-white mb-6"><%= @event.title %></p>
 
-      <p class="text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wider">🔗 共有URL（ステップ4で追加予定）</p>
-      <div class="bg-black/30 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm text-indigo-300 break-all">
-        <%= request.base_url %>/events/<%= @event.token %>
+      <p class="text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wider">🔗 参加者への共有URL</p>
+      <div class="bg-black/30 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm text-indigo-300 break-all select-all">
+        <%= request.base_url %>/event/<%= @event.token %>/respond
       </div>
+      <p class="text-xs text-slate-500 mt-2">※ このURLを参加者に共有してください</p>
+    </div>
+
+    <!-- 集計ページへのリンク -->
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-5 mb-6">
+      <p class="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">📊 集計・管理</p>
+      <%= link_to result_event_path(token: @event.token),
+          class: "flex items-center gap-3 px-4 py-3 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-indigo-300 text-sm hover:bg-indigo-500/20 transition-colors" do %>
+        <span class="text-lg">📊</span>
+        <span class="font-medium">集計結果を確認する</span>
+        <span class="ml-auto text-indigo-400/60 text-xs"><%= @event.attendances.count %>名回答済み →</span>
+      <% end %>
     </div>
 
     <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">

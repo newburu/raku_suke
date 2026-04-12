@@ -15,6 +15,15 @@ Rails.application.routes.draw do
     end
   end
 
+  # トークンURLで参加者が回答するページ（tokenはevents.tokenカラムの値）
+  scope "/event/:token" do
+    get    "respond", to: "attendances#new",     as: :respond_event
+    post   "attend",  to: "attendances#create",  as: :attend_event
+    get    "result",  to: "attendances#result",  as: :result_event
+    get    "thanks",  to: "attendances#thanks",  as: :thanks_event
+    delete "attend",  to: "attendances#destroy", as: :destroy_attendance
+  end
+
   # ルートは暫定でevents#newを指定
   root "events#new"
 end

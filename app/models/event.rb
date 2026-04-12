@@ -1,5 +1,6 @@
 class Event < ApplicationRecord
   has_many :candidate_dates, dependent: :destroy
+  has_many :attendances, dependent: :destroy
   accepts_nested_attributes_for :candidate_dates,
     allow_destroy: true,
     reject_if: :all_blank
