@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
-  resources :events, only: [:new, :create, :show] do
+  resources :events, only: [:new, :create, :show, :edit, :update] do
     collection do
       post :extract_schedule
     end
@@ -17,11 +17,12 @@ Rails.application.routes.draw do
 
   # トークンURLで参加者が回答するページ（tokenはevents.tokenカラムの値）
   scope "/event/:token" do
-    get    "respond", to: "attendances#new",     as: :respond_event
-    post   "attend",  to: "attendances#create",  as: :attend_event
-    get    "result",  to: "attendances#result",  as: :result_event
-    get    "thanks",  to: "attendances#thanks",  as: :thanks_event
-    delete "attend",  to: "attendances#destroy", as: :destroy_attendance
+    get    "/",       to: "attendances#show_event", as: :event_by_token   # トークンでイベント詳細を参照
+    get    "respond", to: "attendances#new",        as: :respond_event
+    post   "attend",  to: "attendances#create",     as: :attend_event
+    get    "result",  to: "attendances#result",     as: :result_event
+    get    "thanks",  to: "attendances#thanks",     as: :thanks_event
+    delete "attend",  to: "attendances#destroy",    as: :destroy_attendance
   end
 
   # ルートは暫定でevents#newを指定

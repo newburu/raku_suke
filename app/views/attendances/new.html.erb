@@ -36,7 +36,7 @@
       <p class="text-xs text-indigo-400 font-semibold uppercase tracking-wider mb-2">スケジュール調整</p>
       <h1 class="text-2xl font-bold text-white mb-2"><%= @event.title %></h1>
       <% if @event.description.present? %>
-        <p class="text-slate-400 text-sm"><%= @event.description %></p>
+        <div class="text-slate-400 text-sm leading-relaxed whitespace-pre-wrap mt-3"><%= @event.description %></div>
       <% end %>
     </div>
 
@@ -190,7 +190,7 @@
     }
 
     // 既存の回答をページ読み込み時にボタンに反映する
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('turbo:load', () => {
       document.querySelectorAll('[data-response-group]').forEach(group => {
         const hidden = group.querySelector('input[type="hidden"]');
         if (!hidden || !hidden.value) return;

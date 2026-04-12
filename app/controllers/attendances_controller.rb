@@ -50,6 +50,17 @@ class AttendancesController < ApplicationController
   def thanks
   end
 
+  # トークンURLでイベント詳細（show）を表示する
+  def show_event
+    @is_owner = cookies.signed["raku_suke_owner_#{@event.token}"] == @event.id
+    if @is_owner
+      render template: "events/show"
+    else
+      # 作成者以外は集計ページへ
+      redirect_to result_event_path(token: @event.token)
+    end
+  end
+
   # 主催者向け集計ページ
   def result
     @attendances = @event.attendances.order(:created_at)
