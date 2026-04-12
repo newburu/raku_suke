@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
   before_action :set_event
-  before_action :load_existing_attendance, only: [:new, :create]
+  before_action :load_existing_attendance, only: [:new, :create, :destroy]
 
   # 参加者の回答フォームを表示する
   def new
