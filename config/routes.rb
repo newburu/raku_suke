@@ -25,6 +25,6 @@ Rails.application.routes.draw do
     delete "attend",  to: "attendances#destroy",    as: :destroy_attendance
   end
 
-  # ルートは暫定でevents#newを指定
-  root "events#new"
+  # ルートをLP（Home）に変更
+  root "home#index"
 end

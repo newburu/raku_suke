@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>らくスケ - AIでかんたんスケジュール調整</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white font-sans flex flex-col">
+
+  <!-- ヘッダー -->
+  <header class="border-b border-white/10 backdrop-blur-sm bg-white/5 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <%= link_to root_path, class: "flex items-center gap-3 hover:opacity-80 transition-opacity" do %>
+        <img src="/icon.png" alt="らくスケ" class="w-10 h-10 object-contain drop-shadow-md">
+        <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-300 to-violet-300 bg-clip-text text-transparent">らくスケ</h1>
+      <% end %>
+      <div>
+        <%= link_to "新しく作成する", new_event_path, class: "px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white text-sm font-semibold hover:from-indigo-400 hover:to-violet-400 transition-all shadow-md" %>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <!-- ヒーローセクション -->
+    <section class="py-16 px-4 relative overflow-hidden">
+      <!-- 装飾用背景サークル -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div class="max-w-3xl mx-auto text-center relative z-10">
+        <div class="flex justify-center mb-6">
+          <img src="/icon.png" alt="らくスケマスコット" class="w-32 h-32 object-contain drop-shadow-2xl animate-bounce" style="animation-duration: 3s;">
+        </div>
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
+          日程調整の面倒を<br>
+          <span class="bg-gradient-to-r from-indigo-300 via-purple-300 to-emerald-300 bg-clip-text text-transparent">AIで一瞬に。</span>
+        </h2>
+        <p class="text-slate-300 text-lg md:text-xl mb-10 leading-relaxed max-w-2xl mx-auto">
+          「来週の月曜か水曜の午後」と入力するだけで、AIが候補日時を自動抽出。<br>
+          URLを共有して、みんなの予定をサクッとまとめましょう。会員登録は不要です。
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <%= link_to new_event_path, class: "group relative px-8 py-4 w-full sm:w-auto rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_-10px_rgba(20,184,166,0.6)]" do %>
+            <span class="flex items-center justify-center gap-2">
+              <span class="text-xl">✨</span> いますぐ調整を始める
+            </span>
+            <div class="absolute inset-0 rounded-2xl ring-2 ring-white/20 group-hover:ring-white/40 transition-all"></div>
+          <% end %>
+        </div>
+      </div>
+    </section>
+
+    <!-- ダッシュボードセクション（Cookie履歴） -->
+    <% if @created_events.any? || @voted_events.any? %>
+      <section class="max-w-4xl mx-auto px-4 py-12 border-t border-white/10">
+        <h3 class="text-2xl font-bold mb-8 text-center flex items-center justify-center gap-3">
+          <span>📚</span>
+          <span class="bg-gradient-to-r from-slate-200 to-slate-400 bg-clip-text text-transparent">最近の利用履歴</span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- 作成したイベント -->
+          <% if @created_events.any? %>
+            <div class="space-y-4">
+              <h4 class="text-lg font-semibold text-indigo-300 flex items-center gap-2">
+                👑 あなたが作成・管理中のイベント
+              </h4>
+              <div class="space-y-3">
+                <% @created_events.each do |event| %>
+                  <%= link_to event_path(event), class: "block card bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-5 transition-all hover:scale-[1.02]" do %>
+                    <h5 class="font-bold text-white mb-2 text-lg truncate"><%= event.title %></h5>
+                    <div class="flex items-center justify-between text-xs text-slate-400">
+                      <span class="flex items-center gap-1">📅 <%= event.created_at.strftime('%Y/%m/%d') %></span>
+                      <span class="bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded text-[10px] font-bold">管理画面へ →</span>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- 回答したイベント -->
+          <% if @voted_events.any? %>
+            <div class="space-y-4">
+              <h4 class="text-lg font-semibold text-emerald-300 flex items-center gap-2">
+                ✅ あなたが回答したイベント
+              </h4>
+              <div class="space-y-3">
+                <% @voted_events.each do |event| %>
+                  <%= link_to event_by_token_path(token: event.token), class: "block card bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-5 transition-all hover:scale-[1.02]" do %>
+                    <h5 class="font-bold text-white mb-2 text-lg truncate"><%= event.title %></h5>
+                    <div class="flex items-center justify-between text-xs text-slate-400">
+                      <span class="flex items-center gap-1">📅 <%= event.created_at.strftime('%Y/%m/%d') %></span>
+                      <span class="bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded text-[10px] font-bold">確認する →</span>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+        </div>
+      </section>
+    <% end %>
+
+    <!-- サービスの良いところ -->
+    <section class="max-w-4xl mx-auto px-4 py-16 border-t border-white/10">
+      <h3 class="text-3xl font-bold mb-12 text-center flex items-center justify-center gap-3">
+        <span>✨</span>
+        <span class="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">らくスケのいいところ</span>
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white/5 rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-colors">
+          <div class="text-4xl mb-4">🤖</div>
+          <h4 class="text-xl font-bold mb-3 text-white">AIにお任せ</h4>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            箇条書きでも、ふわっとした文章でも大丈夫。「来週のどっか」などでもAIがよしなに解釈して候補日時をリストアップします。
+          </p>
+        </div>
+        <div class="bg-white/5 rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-colors">
+          <div class="text-4xl mb-4">⚡</div>
+          <h4 class="text-xl font-bold mb-3 text-white">ログイン不要</h4>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            面倒な会員登録やログインは一切不要。URLを発行して参加者にシェアするだけで、誰でもすぐに使えます。
+          </p>
+        </div>
+        <div class="bg-white/5 rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-colors">
+          <div class="text-4xl mb-4">📱</div>
+          <h4 class="text-xl font-bold mb-3 text-white">スマホ完全対応</h4>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            スマートフォンやタブレットからの操作にも最適化。移動中や思い立ったときに、サクサク日程調整が進みます。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 使い方 -->
+    <section class="max-w-4xl mx-auto px-4 py-16 border-t border-white/10">
+      <h3 class="text-3xl font-bold mb-12 text-center flex items-center justify-center gap-3">
+        <span>📖</span>
+        <span class="bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent">かんたん3ステップ</span>
+      </h3>
+      <div class="relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/20 before:to-transparent space-y-8">
+        
+        <!-- Step 1 -->
+        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+          <div class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-slate-900 bg-indigo-500 text-white font-bold text-lg shadow-xl z-20 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+            1
+          </div>
+          <div class="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] bg-white/5 p-6 rounded-2xl border border-white/10 shadow-lg">
+            <h4 class="font-bold text-lg text-white mb-2">文章で候補を伝える</h4>
+            <p class="text-slate-400 text-sm">
+              「新しく作成する」から、イベント名と候補にしたい日時を自由な文章で入力します。AIが自動で一覧にします。
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+          <div class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-slate-900 bg-purple-500 text-white font-bold text-lg shadow-xl z-20 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+            2
+          </div>
+          <div class="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] bg-white/5 p-6 rounded-2xl border border-white/10 shadow-lg">
+            <h4 class="font-bold text-lg text-white mb-2">URLをみんなにシェア</h4>
+            <p class="text-slate-400 text-sm">
+              作成した専用ページのURLをコピーして、LINEやSlackなどで参加者に共有します。
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+          <div class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-slate-900 bg-emerald-500 text-white font-bold text-lg shadow-xl z-20 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+            3
+          </div>
+          <div class="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] bg-white/5 p-6 rounded-2xl border border-white/10 shadow-lg">
+            <h4 class="font-bold text-lg text-white mb-2">回答結果を確認！</h4>
+            <p class="text-slate-400 text-sm">
+              みんなが回答すると、管理画面で◯△×の集計表がひと目で確認できます。集まったら日程を決定しましょう！
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="mt-auto py-8 text-center text-slate-500 text-sm border-t border-white/10 bg-black/20">
+    <p>&copy; <%= Time.current.year %> らくスケ. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
