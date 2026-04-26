@@ -36,7 +36,8 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 set :keep_releases, 5
 
 # rbenv
-set :rbenv_type, :user
+set :rbenv_type, :custom
+set :rbenv_custom_path, "/usr/local/src/rbenv"
 set :rbenv_ruby, "4.0.1"
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 set :rbenv_map_bins, %w{rake gem bundle ruby rails puma pumactl}

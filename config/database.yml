@@ -52,5 +52,3 @@ test:
 production:
   <<: *default
   database: raku_suke_production
-  username: raku_suke
-  password: <%= ENV["RAKU_SUKE_DATABASE_PASSWORD"] %>
