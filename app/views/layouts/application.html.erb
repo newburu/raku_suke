@@ -4,14 +4,35 @@
     <title><%= content_for(:title) || "Raku Suke" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <% 
+      og_title = content_for(:og_title) || content_for(:title) || "らくスケ - AIでかんたんスケジュール調整"
+      og_description = content_for(:og_description) || "「来週の月曜か水曜の午後」と入力するだけで、AIが候補日時を自動抽出。ログイン不要でかんたんに日程調整ができます。"
+      og_url = request.original_url
+      og_image = request.base_url + "/ogp.png"
+    %>
+    <!-- OGP Tags -->
+    <meta property="og:title" content="<%= og_title %>">
+    <meta property="og:description" content="<%= og_description %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= og_url %>">
+    <meta property="og:image" content="<%= og_image %>">
+    <meta property="og:site_name" content="らくスケ">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= og_title %>">
+    <meta name="twitter:description" content="<%= og_description %>">
+    <meta name="twitter:image" content="<%= og_image %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
     <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
 
