@@ -1,18 +1,5 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <title>イベントを編集 - らくスケ</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta charset="UTF-8">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
-</head>
-
-<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white font-sans">
-
-  <!-- ヘッダー -->
+<% content_for :title, "イベントを編集 - らくスケ" %>
+<!-- ヘッダー -->
   <header class="border-b border-white/10 backdrop-blur-sm bg-white/5">
     <div class="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
       <%= link_to root_path, class: "flex items-center gap-3 hover:opacity-80 transition-opacity" do %>
@@ -133,5 +120,3 @@
 
     <% end %>
   </main>
-</body>
-</html>

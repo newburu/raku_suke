@@ -1,17 +1,6 @@
+<% content_for :title, "らくスケ - 作成完了" %>
 <!-- 保存完了・共有URLページ -->
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <title>らくスケ - 作成完了</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta charset="UTF-8">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
-</head>
-<body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white font-sans flex flex-col">
-  <header class="border-b border-white/10 backdrop-blur-sm bg-white/5">
+<header class="border-b border-white/10 backdrop-blur-sm bg-white/5">
     <div class="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
       <%= link_to root_path, class: "flex items-center gap-3 hover:opacity-80 transition-opacity" do %>
         <img src="/icon.png" alt="らくスケ" class="w-10 h-10 object-contain drop-shadow-md">
@@ -88,5 +77,3 @@
     <%= link_to "＋ 別のイベントを作成する", new_event_path,
         class: "block w-full text-center px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold text-sm hover:from-indigo-400 hover:to-violet-400 transition-all duration-150" %>
   </main>
-</body>
-</html>
