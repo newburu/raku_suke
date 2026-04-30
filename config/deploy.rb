@@ -47,4 +47,5 @@ set :rbenv_roles, :all
 set :puma_enable_socket_service, false
 set :puma_service_unit_name, "puma_raku_suke"
 set :puma_systemctl_user, :system
-set :puma_bind, "tcp://127.0.0.1:3001"
+set :puma_bind, "unix:///var/www/raku_suke/shared/tmp/sockets/puma_raku_suke.sock"
+set :puma_cmd, "/usr/local/src/rbenv/shims/bundle exec puma"
